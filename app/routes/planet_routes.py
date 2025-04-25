@@ -1,4 +1,4 @@
-from flask import abort, make_response, Blueprint, request
+from flask import abort, make_response, Blueprint, request, Response
 from app.models.planet import Planet
 from ..db import db
 
@@ -40,3 +40,50 @@ def get_all_planets():
                 }
         )
     return planets_response
+
+@planet_list_bp.get("/<planet_id>")
+def get_one_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    return {
+        "id": planet.id,
+        "name": planet.name,
+        "description": planet.description,
+        "rings": planet.rings
+    }
+
+@planet_list_bp.put("/<planet_id>") 
+def update_planet(planet_id):        
+    planet = validate_planet(planet_id)
+    request_body = request.get_json()
+
+    planet.name = request_body["name"]
+    planet.description = request_body["description"]
+    planet.rings = request_body["rings"]
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
+def validate_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        response = {"message": f"Planet {planet_id} invalid"}
+        abort(make_response(response, 400))
+
+    query = db.select(Planet).where(Planet.id == planet_id)
+    planet = db.session.scalar(query)
+
+    if not planet:
+        response = {"message": f"Planet {planet_id} not found"}
+        abort(make_response(response, 404))
+
+    return planet
+
+@planet_list_bp.delete("/<planet_id>")
+def delete_planet(planet_id):
+    planet = validate_planet(planet_id)
+    db.session.delete(planet)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
