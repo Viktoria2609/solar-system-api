@@ -27,10 +27,21 @@ def create_planet():
 @planet_list_bp.get("")
 def get_all_planets():
 
-    query = db.select(Planet)#(query.order_by(Planet.id))
+    query = db.select(Planet)
     description_param = request.args.get("description")
     if description_param:
         query = query.where(Planet.description.ilike(f"%{description_param}%"))
+    
+    rings_param = request.args.get("rings")
+    if rings_param is not None:
+        if rings_param.lower() == "true":
+            rings_bool = True
+        elif rings_param.lower() == "false":
+            rings_bool = False
+        else:
+            return {"error": "Invalid value for rings. Use true or false."}, 400
+
+        query = query.where(Planet.rings == rings_bool)
 
     query = query.order_by(Planet.id)
     planets = db.session.scalars(query)
