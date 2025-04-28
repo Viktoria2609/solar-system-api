@@ -29,7 +29,7 @@ def get_all_planets():
 
     query = db.select(Planet)
     description_param = request.args.get("description")
-    if description_param:
+    if description_param.lower():
         query = query.where(Planet.description.ilike(f"%{description_param}%"))
     
     rings_param = request.args.get("rings")
