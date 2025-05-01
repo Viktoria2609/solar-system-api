@@ -8,21 +8,11 @@ planet_list_bp = Blueprint("planet_list_bp", __name__, url_prefix = "/planet_lis
 @planet_list_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    name = request_body["name"]
-    description = request_body["description"]
-    rings = request_body["rings"]
-    
-    new_planet = Planet(name=name, description=description, rings=rings)
+    new_planet = Planet.from_dict(request_body)
     db.session.add(new_planet)
     db.session.commit()
 
-    response = {
-        "id": new_planet.id,
-        "name": new_planet.name,
-        "description": new_planet.description,
-        "rings": new_planet.rings
-    }
-    return response, 201
+    return new_planet.to_dict(), 201
 
 @planet_list_bp.get("")
 def get_all_planets():
@@ -48,26 +38,15 @@ def get_all_planets():
 
     planets_response = []
     for planet in planets:
-        planets_response.append(
-            {
-                "id": planet.id,
-                "name": planet.name,
-                "description": planet.description,
-                "rings": planet.rings
-                }
-        )
+        print(planet, type(planet))
+        planets_response.append(planet.to_dict())
     return planets_response
 
 @planet_list_bp.get("/<planet_id>")
 def get_one_planet(planet_id):
     planet = validate_planet(planet_id)
 
-    return {
-        "id": planet.id,
-        "name": planet.name,
-        "description": planet.description,
-        "rings": planet.rings
-    }
+    return planet.to_dict()
 
 @planet_list_bp.put("/<planet_id>") 
 def update_planet(planet_id):        
