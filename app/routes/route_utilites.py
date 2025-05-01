@@ -3,7 +3,7 @@ from ..db import db
 
 def validate_model(cls, model_id):
     try:
-        model_id_id = int(model_id)
+        model_id = int(model_id)
     except ValueError:
         response = {"message": f"{cls.__name__} id {model_id} is invalid"}
         abort(make_response(response, 400))
