@@ -19,7 +19,8 @@ def test_get_one_planet(client, two_saved_planets):
         "id": 1,
         "name": "Pink Planet",
         "description": "very pink",
-        "rings": False
+        "rings": False,
+        "moon": None
     }
 
 def test_create_one_planet(client):
@@ -37,5 +38,6 @@ def test_create_one_planet(client):
         "id": 1,
         "name": "New Planet",
         "description": "Unknown",
-        "rings": False
+        "rings": False,
+        "moon": None
     }
