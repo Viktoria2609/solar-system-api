@@ -17,7 +17,17 @@ class Moon(db.Model):
         }
         
     
+    # @classmethod
+    # def from_dict(cls, moon_data):
+    #     new_moon = cls(name=moon_data["name"])
+    #     return new_moon
+    
+
     @classmethod
     def from_dict(cls, moon_data):
-        new_moon = cls(name=moon_data["name"])
+        new_moon = cls(
+        name=moon_data["name"],
+        description=moon_data["description"],
+        size=moon_data["size"]
+        )
         return new_moon

@@ -23,13 +23,13 @@ def create_planet_with_moon_id(id):
 
 
 @bp.get("")
-def get_all_galaxies():
+def get_all_moons():
     return get_models_with_filters(Moon, request.args)
 
 
-@bp.get("/<id>/planets")
-def get_all_galaxies_planets(id):
+@bp.get("/<id>/planet_list")
+def get_all_moons_planets(id):
     moon = validate_model(Moon, id)
-    response = [planet.to_dict() for planet in moon.planets]
+    response = [planet.to_dict() for planet in moon.planet]
     
     return response
