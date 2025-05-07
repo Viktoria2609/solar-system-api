@@ -1,5 +1,6 @@
 from flask import Blueprint, request, Response
 from app.models.moon import Moon
+from app.models.planet import Planet
 from .route_utilites import validate_model, create_model, get_models_with_filters
 from app.models import planet
 from ..db import db
@@ -19,7 +20,7 @@ def create_planet_with_moon_id(id):
     request_body = request.get_json() 
     request_body ["moon_id"] = moon.id
 
-    return create_model(Moon, request_body)
+    return create_model(Planet, request_body)
 
 
 @bp.get("")
@@ -30,6 +31,6 @@ def get_all_moons():
 @bp.get("/<id>/planet_list")
 def get_all_moons_planets(id):
     moon = validate_model(Moon, id)
-    response = [planet.to_dict() for planet in moon.planet]
+    response = [planet.to_dict() for planet in moon.planets]
     
     return response
